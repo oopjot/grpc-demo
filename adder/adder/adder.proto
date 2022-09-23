@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "github.com/oopjot/grpc-demo/adder/adder";
+
+package adder;
+
+
+service Adder {
+    rpc Add (AddRequest) returns (AddRequest) {} 
+}
+
+message AddRequest {
+    double a = 1;
+    double b = 2;
+}
+
+message AddResponse {
+    double result = 1;
+}
+
