@@ -6,15 +6,15 @@ package adder;
 
 
 service Adder {
-    rpc Add (AddRequest) returns (AddRequest) {} 
+    rpc Add (AddRequest) returns (AddResponse) {} 
 }
 
 message AddRequest {
-    double a = 1;
-    double b = 2;
+    int64 a = 1;
+    int64 b = 2;
 }
 
 message AddResponse {
-    double result = 1;
+    int64 result = 1;
 }
 

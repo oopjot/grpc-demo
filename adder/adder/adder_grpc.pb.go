@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.6
-// source: adder.proto
+// source: adder/adder/adder.proto
 
 package adder
 
@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdderClient interface {
-	Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddRequest, error)
+	Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddResponse, error)
 }
 
 type adderClient struct {
@@ -33,8 +33,8 @@ func NewAdderClient(cc grpc.ClientConnInterface) AdderClient {
 	return &adderClient{cc}
 }
 
-func (c *adderClient) Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddRequest, error) {
-	out := new(AddRequest)
+func (c *adderClient) Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddResponse, error) {
+	out := new(AddResponse)
 	err := c.cc.Invoke(ctx, "/adder.Adder/Add", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (c *adderClient) Add(ctx context.Context, in *AddRequest, opts ...grpc.Call
 // All implementations must embed UnimplementedAdderServer
 // for forward compatibility
 type AdderServer interface {
-	Add(context.Context, *AddRequest) (*AddRequest, error)
+	Add(context.Context, *AddRequest) (*AddResponse, error)
 	mustEmbedUnimplementedAdderServer()
 }
 
@@ -54,7 +54,7 @@ type AdderServer interface {
 type UnimplementedAdderServer struct {
 }
 
-func (UnimplementedAdderServer) Add(context.Context, *AddRequest) (*AddRequest, error) {
+func (UnimplementedAdderServer) Add(context.Context, *AddRequest) (*AddResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
 }
 func (UnimplementedAdderServer) mustEmbedUnimplementedAdderServer() {}
@@ -101,5 +101,5 @@ var Adder_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "adder.proto",
+	Metadata: "adder/adder/adder.proto",
 }
