@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 
 	rpc "github.com/oopjot/grpc-demo/fibonacci/fibonacci"
 	"google.golang.org/grpc"
@@ -14,14 +13,14 @@ type Client struct {
     stub rpc.FibonacciClient
 }
 
-func New(addr string, port int) *Client {
+func New(addr string, port int) (*Client, error) {
     client := Client{}
     connection, err := grpc.Dial(fmt.Sprintf("%s:%d", addr, port), grpc.WithInsecure())
     if err != nil {
-        log.Fatalf("Cannot connect: %v", err)
+        return &Client{}, err
     }
     client.stub = rpc.NewFibonacciClient(connection)
-    return &client
+    return &client, nil
 }
 
 func (c *Client) Number(n int64) (int64, error) {
