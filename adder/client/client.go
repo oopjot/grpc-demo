@@ -23,8 +23,12 @@ func New(addr string, port int) *Client {
     return &client
 }
 
-func (c *Client) Add(a, b int64) (string, error) {
+func (c *Client) Add(a, b int64) (int64, error) {
     request := &rpc.AddRequest{A: a, B: b}
     res, err := c.stub.Add(context.Background(), request)
+    if err != nil {
+        return 0, err
+    }
+    return res.Result, nil
 }
 
