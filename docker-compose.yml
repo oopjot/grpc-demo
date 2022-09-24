@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  adder:
+    build:
+      context: ./adder
+  fibonacci:
+    build:
+      context: ./fibonacci
+  gateway:
+    build:
+      context: ./gateway
+    ports:
+      - 8000:8000
+
