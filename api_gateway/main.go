@@ -19,7 +19,9 @@ func main() {
         log.Printf("Adder service unavaliable: %v", err)
     } else {
         log.Println("Adder service loaded")
-        r.HandleFunc("/add", handlers.AdderHandler(adder))
+        r.HandleFunc("/add", handlers.AdderHandler(adder)).
+            Methods("GET").
+            Queries("a", "{[0-9]+}", "b", "{[0-9]+}")
     }
 
     fib, err := fib.New("fibonacci", 50001)
@@ -27,7 +29,8 @@ func main() {
         log.Printf("Fibonacci service unavaliable: %v", err)
     } else {
         log.Println("Fibonacci service loaded")
-        r.HandleFunc("/fibonacci/{n:[0-9]+}", handlers.FibNumberHandler(fib))
+        r.HandleFunc("/fibonacci/{n:[0-9]+}", handlers.FibNumberHandler(fib)).
+            Methods("GET")
     }
     log.Println("Gateway listening on 8000")
     log.Fatal(http.ListenAndServe(":8000", r))

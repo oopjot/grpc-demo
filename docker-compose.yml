@@ -8,7 +8,7 @@ services:
       context: ./fibonacci
   gateway:
     build:
-      context: ./gateway
+      context: ./api_gateway
     ports:
       - 8000:8000
 

@@ -10,11 +10,6 @@ import (
 	fib "github.com/oopjot/grpc-demo/fibonacci/client"
 )
 
-type addPayload struct {
-    A int64 `json:"a"`
-    B int64 `json:"b"`
-}
-
 type addResponse struct {
     Result int64 `json:"result"`
 }
@@ -26,13 +21,22 @@ type fibResponse struct {
 
 func AdderHandler(c *adder.Client) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
-        var payload addPayload
-        if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+        a := r.FormValue("a")
+        A, err := strconv.ParseInt(a, 10, 64)
+        if err != nil {
             w.WriteHeader(http.StatusBadRequest)
             w.Write([]byte(err.Error()))
             return
         }
-        res, err := c.Add(payload.A, payload.B)
+        b := r.FormValue("b")
+        B, err := strconv.ParseInt(b, 10, 64)
+        if err != nil {
+            w.WriteHeader(http.StatusBadRequest)
+            w.Write([]byte(err.Error()))
+            return
+        }
+
+        res, err := c.Add(A, B)
         if err != nil {
             w.WriteHeader(http.StatusInternalServerError)
             w.Write([]byte(err.Error()))
