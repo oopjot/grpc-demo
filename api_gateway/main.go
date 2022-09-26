@@ -21,7 +21,7 @@ func main() {
         log.Println("Adder service loaded")
         r.HandleFunc("/add", handlers.AdderHandler(adder)).
             Methods("GET").
-            Queries("a", "{[0-9]+}", "b", "{[0-9]+}")
+            Queries("a", "{a:[0-9]+}", "b", "{b:[0-9]+}")
     }
 
     fib, err := fib.New("fibonacci", 50001)
@@ -30,6 +30,9 @@ func main() {
     } else {
         log.Println("Fibonacci service loaded")
         r.HandleFunc("/fibonacci/{n:[0-9]+}", handlers.FibNumberHandler(fib)).
+            Methods("GET")
+
+        r.HandleFunc("/fibonacci/{n:[0-9]+}/all", handlers.FibSeqHandler(fib)).
             Methods("GET")
     }
     log.Println("Gateway listening on 8000")

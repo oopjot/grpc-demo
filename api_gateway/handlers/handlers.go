@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	adder "github.com/oopjot/grpc-demo/adder/client"
 	fib "github.com/oopjot/grpc-demo/fibonacci/client"
+	"github.com/oopjot/grpc-demo/fibonacci/fibonacci"
 )
 
 type addResponse struct {
@@ -77,5 +78,38 @@ func FibNumberHandler(c *fib.Client) http.HandlerFunc {
             return
         }
         w.Write(data)
+    }
+}
+
+func FibSeqHandler(c *fib.Client) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        vars := mux.Vars(r)
+        n, err := strconv.ParseInt(vars["n"], 10, 64)
+        if err != nil {
+            w.WriteHeader(http.StatusBadRequest)
+            w.Write([]byte(err.Error()))
+        }
+
+        results := make(chan *fibonacci.FibResponse)
+
+        go func() {
+            err = c.Sequence(n, results)
+        }()
+        go func() {
+            for res := range results {
+                data, err := json.Marshal(res)
+                if err == nil {
+                    w.Write(data)
+                    w.(http.Flusher).Flush()
+                }
+            }
+        }()
+
+        if err != nil {
+            w.WriteHeader(http.StatusInternalServerError)
+            w.Write([]byte(err.Error()))
+            return
+        }
+
     }
 }
