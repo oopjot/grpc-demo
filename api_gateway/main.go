@@ -8,7 +8,7 @@ import (
 
 	adder "github.com/oopjot/grpc-demo/adder/client"
 	fib "github.com/oopjot/grpc-demo/fibonacci/client"
-	"github.com/oopjot/grpc-demo/gateway/handlers"
+	"github.com/oopjot/grpc-demo/api_gateway/handlers"
 )
 
 func main() {
